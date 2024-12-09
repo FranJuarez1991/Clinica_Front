@@ -1,0 +1,182 @@
+[
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "login;login-fallido-contraseña-incorrecta",
+        "keyword": "Scenario",
+        "line": 3,
+        "name": "Login fallido contraseña incorrecta",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "el usuario registrado como \"Francisco\"",
+            "match": {
+              "location": "src\\features\\step_definitions\\loginContraseñaIncorrecta.steps.js:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 77347500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 5,
+            "name": "el usuario ingresa su contraseña \"123456\"",
+            "match": {
+              "location": "src\\features\\step_definitions\\loginContraseñaIncorrecta.steps.js:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 333778700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 6,
+            "name": "el sistema debe mostrar un mensaje de \"Usuario y/o contraseña incorrecta\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "login",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Login",
+    "tags": [],
+    "uri": "src\\features\\loginContraseñaIncorrecta.feature"
+  },
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "login-de-usuario;login-exitoso-con-correo-y-contraseña-válidos",
+        "keyword": "Scenario",
+        "line": 4,
+        "name": "Login exitoso con correo y contraseña válidos",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "el usuario está en la página de login",
+            "match": {
+              "location": "src\\features\\step_definitions\\loginExitoso.steps.js:10"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 896399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 6,
+            "name": "ingresa como usuario \"Francisco\" y contraseña \"Fran2024\"",
+            "match": {
+              "location": "src\\features\\step_definitions\\loginExitoso.steps.js:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 271663600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 7,
+            "name": "se muestra como mensaje \"usuario logueado con Éxito\"",
+            "match": {
+              "location": "src\\features\\step_definitions\\loginExitoso.steps.js:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6311700
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "login-de-usuario",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Login de usuario",
+    "tags": [],
+    "uri": "src\\features\\loginExitoso.feature"
+  },
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "login-de-usuario;intento-de-inicio-de-sesión-fallido-por-usuario-incorrecto",
+        "keyword": "Scenario",
+        "line": 3,
+        "name": "Intento de inicio de sesión fallido por usuario incorrecto",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "el usuario ingresado es \"Franco\"",
+            "match": {
+              "location": "src\\features\\step_definitions\\loginUserIncorrecto.steps.js:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1038400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 5,
+            "name": "ingresa una contraseña \"Fran2024\" y presiona el botón \"Iniciar sesión\"",
+            "match": {
+              "location": "src\\features\\step_definitions\\loginUserIncorrecto.steps.js:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 325406900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 6,
+            "name": "el sistema muestra un mensaje de error \"Usuario y/o contaseña incorrecta\"",
+            "match": {
+              "location": "src\\features\\step_definitions\\loginUserIncorrecto.steps.js:35"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1203699
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "login-de-usuario",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Login de usuario",
+    "tags": [],
+    "uri": "src\\features\\loginUserIncorrecto.feature"
+  }
+]

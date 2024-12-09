@@ -1,0 +1,103 @@
+/* Estilos generales */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to bottom, #e9f5f5, #d4ebf2, #bfe0ed);
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Fondo negro al final de la página */
+footer {
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Card de login */
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  animation: slideIn 0.6s ease-in-out;
+}
+
+/* Animación */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos de título */
+h2 {
+  color: #00796b;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Botón */
+button {
+  background-color: #00796b;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 10px 0;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #004d40;
+}
+
+/* Campos de entrada */
+input {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #00796b;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 121, 107, 0.5);
+}
+
+/* Mensaje de error */
+.alert {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .login-card {
+    width: 90%;
+    padding: 15px;
+  }
+
+  button {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,87 @@
+.navbar {
+  background-color: hsl(210, 58%, 60%);
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed; /* Mantiene el navbar fijo en la parte superior */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Asegurar espacio para el contenido */
+.page-content {
+  margin-top: 140px; /* Ajusta este valor según la altura del navbar */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Menú principal */
+.navLinks {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.navItem:last-child {
+  margin-left: auto;
+}
+
+/* Menú móvil */
+.navLinksMobile {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%; /* Asegura que se posicione debajo del navbar */
+  right: 0;
+  background-color: #f8f9fa;
+  width: 200px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+
+
+/* Logo */
+.logo-container {
+  display: flex;
+  flex-direction: column; /* Cambiado para que los elementos se apilen verticalmente */
+  align-items: center; /* Centra tanto el logo como el texto */
+}
+
+.logo-text {
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  margin-left: 0px;
+}
+
+/* Efecto hover */
+.navItem :hover {
+  color: hsl(240, 18%, 4%); /* Cambia a blanco cuando se pasa el mouse */
+  background-color: hsl(123, 58%, 28%); /* Fondo de color más oscuro en hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Añade una sombra sutil */
+  transform: scale(1.2); /* Aumenta el tamaño al pasar el ratón */
+filter: brightness(150%); /* Aumenta el brillo */
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .navLinks {
+    display: none;
+  }
+  .hamburger {
+    display: flex;
+  }
+  .navLinksMobile {
+    display: none;
+  }
+  .navbar.open .navLinksMobile {
+    display: flex;
+  }
+}
