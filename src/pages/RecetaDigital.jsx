@@ -73,15 +73,22 @@ const RecetaDigital = () => {
     }
   };
 
-  // Función para imprimir la receta
-  const imprimirReceta = () => {
-    window.print(); // Ejecuta la función de impresión
+  // Función para generar la receta y redirigir
+
+  const mostrarRecetaGenerada = () => {
+    navigate("/receta-digital-generada", {
+      state: {
+        paciente: paciente || {},
+        receta: receta || [],
+        diagnostico: location.state?.diagnostico || "N/A",
+      },
+    });
   };
 
   // Función para redirigir al hacer clic en el botón de cancelar
   const handleCancelar = () => {
     navigate(-1, {
-      state: { paciente }, // Pasamos los datos del paciente al navegar
+      state: { paciente },
     });
   };
 
@@ -111,22 +118,12 @@ const RecetaDigital = () => {
           <p>
             <strong>Obra Social:</strong> {paciente.obraSocial}
           </p>
+          <p>
+            <strong>Número de Afiliado:</strong> {paciente.nroafiliado}
+          </p>
         </div>
       ) : (
         <p>No se encontraron datos del paciente.</p>
-      )}
-
-      {medico && (
-        <div className="doctor-info">
-          <h2>Información del Médico</h2>
-          <p>
-            <strong>Nombre:</strong> {medico.nombreUsuario}
-          </p>
-          <p>
-            <strong>Especialidad:</strong>{" "}
-            {medico.especialidad || "No especificada"}
-          </p>
-        </div>
       )}
 
       <div className="search-container">
@@ -188,8 +185,8 @@ const RecetaDigital = () => {
         <button className="cancel-button" onClick={handleCancelar}>
           Cancelar
         </button>
-        <button className="print-button" onClick={imprimirReceta}>
-          Imprimir Receta
+        <button className="print-button" onClick={mostrarRecetaGenerada}>
+          Generar Receta
         </button>
       </div>
     </div>

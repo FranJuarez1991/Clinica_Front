@@ -9,6 +9,7 @@ const FormLogin = () => {
     contrasenia: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Estado para controlar carga
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -18,6 +19,7 @@ const FormLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Iniciar carga
     setError(""); // Limpiar el mensaje de error antes de hacer la solicitud
 
     try {
@@ -28,16 +30,18 @@ const FormLogin = () => {
       const { token, msg } = response.data;
 
       // Guardar token en localStorage
-      localStorage.setItem("authToken", token);
+      localStorage.setItem("token", token);
 
       // Redirigir al dashboard o la página de inicio
       alert(msg);
-      navigate("./PanelDeControl"); //redireccion
+      navigate("/PanelDeControl"); // redireccionar al panel de control
     } catch (err) {
       const errorMsg =
         err.response?.data?.msg ||
         "Error al iniciar sesión, inténtalo nuevamente";
       setError(errorMsg); // Mostrar el error si ocurre
+    } finally {
+      setLoading(false); // Finalizar carga
     }
   };
 
@@ -76,11 +80,11 @@ const FormLogin = () => {
         <button
           type="submit"
           className="btn btn-success w-100 animate__animated animate__pulse animate__infinite"
+          disabled={loading} // Deshabilitar mientras carga
         >
-          Iniciar Sesión
+          {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
         </button>
       </form>
-      {/* Mostrar el error en rojo */}
       {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
     </div>
   );

@@ -1,0 +1,95 @@
+.receta-container {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-width: 800px;
+  background-color: #f9f9f9;
+}
+
+.receta-header,
+.receta-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.receta-header .logo {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.receta-header .info {
+  text-align: center;
+}
+
+.fecha-receta {
+  text-align: right;
+}
+
+.fecha-receta .barcode {
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.receta-body {
+  margin-top: 20px;
+}
+
+.receta-body p,
+.receta-body ul {
+  margin: 10px 0;
+}
+
+.receta-footer {
+  text-align: center;
+}
+
+.receta-footer .qr-code {
+  margin-top: 10px;
+}
+
+button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+.volver-inicio-btn {
+  background-color: #e63702b0; /* Color de fondo verde */
+  color: white; /* Color de texto blanco */
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.volver-inicio-btn:hover {
+  background-color: #a50a0a; /* Cambio de color al pasar el mouse */
+}
+/* Estilo para ocultar los botones cuando se imprime */
+@media print {
+  button {
+    display: none; /* Oculta los botones */
+  }
+  .volver-inicio-btn{
+     display: none; /* Oculta los botones */
+  }
+  
+}
+

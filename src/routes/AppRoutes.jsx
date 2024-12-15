@@ -5,6 +5,7 @@ import PanelDeControl from "../pages/PanelDeControl";
 import RegistrarEvolucion from "../pages/RegistrarEvolucion";
 import RecetaDigital from "../pages/RecetaDigital";
 import PedidoLaboratorio from "../pages/PedidoLaboratorio";
+import RecetaDigitalGenerada from "../pages/RecetaDigitalGenerada";
 
 const AppRoutes = () => {
   return (
@@ -14,6 +15,11 @@ const AppRoutes = () => {
         <Route path="/PanelDeControl" element={<PanelDeControl />} />
         <Route path="/registrar-evolucion" element={<RegistrarEvolucion />} />
         <Route path="/receta-digital" element={<RecetaDigital />} />
+        <Route
+          path="/receta-digital-generada"
+          element={<RecetaDigitalGenerada />}
+        />
+
         <Route path="/pedidosLaboratorio" element={<PedidoLaboratorio />} />
       </Routes>
     </>

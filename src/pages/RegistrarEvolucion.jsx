@@ -4,19 +4,21 @@ import axios from "axios";
 import NavbarC from "../components/NavbarC";
 import ModalC from "../components/ModalC";
 import { useNavigate } from "react-router-dom";
+import TablaC from "../components/TablaC";
 
 const RegistrarEvolucion = () => {
   const [dni, setDni] = useState("");
   const [paciente, setPaciente] = useState(null);
   const [error, setError] = useState("");
   const [diagnosticos, setDiagnosticos] = useState([]);
-  const [diagnosticoSeleccionado, setDiagnosticoSeleccionado] = useState("");
+  const [diagnosticoSeleccionado, setDiagnosticoSeleccionado] = useState({});
   const [evoluciones, setEvoluciones] = useState([]);
   const [observacion, setObservacion] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("");
   const navigate = useNavigate();
 
+  // Cargar los diagnósticos al inicio
   useEffect(() => {
     const cargarDiagnosticos = async () => {
       try {
@@ -31,13 +33,21 @@ const RegistrarEvolucion = () => {
     cargarDiagnosticos();
   }, []);
 
+  // Buscar paciente por DNI
   const buscarPaciente = async () => {
-    setError(""); // Restablecer el mensaje de error antes de hacer la búsqueda
+    setError("");
     try {
       const response = await axios.get(
         `http://localhost:3001/pacientes/buscar-paciente/${dni}`
       );
-      setPaciente(response.data.data);
+
+      const pacienteEncontrado = response.data.data;
+      setPaciente(pacienteEncontrado);
+
+      const evolucionesPaciente =
+        pacienteEncontrado.historiaClinicaId.evoluciones || [];
+      setEvoluciones(evolucionesPaciente); // Guardar solo los IDs de las evoluciones al principio
+      console.log("Paciente encontrado:", pacienteEncontrado);
     } catch (error) {
       if (error.response) {
         setError(error.response.data.message || "Error al buscar el paciente");
@@ -47,43 +57,134 @@ const RegistrarEvolucion = () => {
       }
     }
   };
+  // Cargar evoluciones completas usando los IDs
+  useEffect(() => {
+    const cargarEvoluciones = async () => {
+      if (paciente && paciente.historiaClinicaId) {
+        try {
+          const response = await axios.get(
+            `http://localhost:3001/evoluciones/${paciente.historiaClinicaId._id}`, // Asegúrate que esta URL es la correcta
+            {
+              params: {
+                ids: paciente.historiaClinicaId.evoluciones.join(","), // Pasamos los IDs de las evoluciones como parámetros
+              },
+            }
+          );
+          // Almacenar las evoluciones completas en el estado
+          setEvoluciones(response.data);
+          console.log("Evoluciones completas:", response.data); // Verificar que las evoluciones completas son cargadas correctamente
+        } catch (error) {
+          console.error("Error al cargar las evoluciones:", error);
+          setError("No hay Evoluciones para mostrar");
+        }
+      }
+    };
 
+    cargarEvoluciones();
+  }, [paciente]); // Este useEffect se ejecuta cuando cambia el paciente
+  // Guardar nueva evolución
   const guardarEvolucion = async () => {
-    if (!diagnosticoSeleccionado) {
+    if (!diagnosticoSeleccionado.codigo || !observacion.trim()) {
+      alert("Debe completar todos los campos antes de continuar.");
+      return;
+    }
+
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      alert("No estás autenticado. Inicia sesión nuevamente.");
+      navigate("/login");
+      return;
+    }
+
+    const evolucionData = {
+      diagnosticoCodigo: diagnosticoSeleccionado.codigo,
+      textoLibre: observacion,
+      historiaClinicaId: paciente.historiaClinicaId._id,
+      tipoEstudio: "Consulta",
+    };
+
+    try {
+      let response;
+
+      if (modalType === "editarEvolucion") {
+        // Si estamos editando una evolución existente
+        const evolucionId = diagnosticoSeleccionado._id; // Obtener el ID de la evolución que estamos editando
+        response = await axios.put(
+          `http://localhost:3001/evoluciones/${evolucionId}`,
+          evolucionData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        // Actualizar el estado de las evoluciones en el frontend
+        setEvoluciones((prevEvoluciones) =>
+          prevEvoluciones.map((evolucion) =>
+            evolucion._id === response.data._id ? response.data : evolucion
+          )
+        );
+        alert("Evolución actualizada exitosamente.");
+      } else {
+        response = await axios.post(
+          "http://localhost:3001/evoluciones",
+          evolucionData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setEvoluciones((prevEvoluciones) => [
+          ...prevEvoluciones,
+          response.data,
+        ]);
+        alert("Evolución registrada exitosamente.");
+      }
+
+      // Limpiar campos después de guardar
+      setDiagnosticoSeleccionado({});
+      setObservacion("");
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error al guardar la evolución:", error);
+      alert("Hubo un error al guardar la evolución.");
+    }
+  };
+
+  useEffect(() => {
+    // Este código se ejecuta cuando se actualiza 'evoluciones'
+    console.log("Evoluciones actualizadas:", evoluciones);
+  }, [evoluciones]);
+
+  // Manejar la edición de una evolución
+  const handleEdit = (evolucion) => {
+    setDiagnosticoSeleccionado(evolucion.diagnostico || {});
+    setObservacion(evolucion.texto);
+    setIsModalOpen(true);
+    setModalType("editarEvolucion");
+  };
+
+  // Navegar a Receta Digital
+  const irARecetaDigital = () => {
+    if (!diagnosticoSeleccionado.codigo) {
       alert("Debe seleccionar un diagnóstico antes de continuar.");
       return;
     }
-
-    if (!observacion.trim()) {
-      alert("La observación no puede estar vacía.");
-      return;
-    }
-
-    try {
-      const nuevaEvolucion = {
-        dni: paciente.paciente.dni,
+    navigate("/receta-digital", {
+      state: {
+        paciente,
         diagnostico: diagnosticoSeleccionado,
-        descripcion: observacion,
-        fecha: new Date().toLocaleDateString(),
-        historiaClinicaId: paciente.historiaClinicaId,
-      };
-
-      await axios.post(`http://localhost:3001/evoluciones`, nuevaEvolucion);
-      setEvoluciones([...evoluciones, nuevaEvolucion]);
-      alert("Evolución clínica guardada exitosamente.");
-      setObservacion(""); // Limpiar el campo de observación
-      setIsModalOpen(false); // Cierra el modal
-    } catch (error) {
-      console.error("Error al guardar evolución:", error);
-      alert("Error al guardar la evolución.");
-    }
+      },
+    });
   };
 
-  const irARecetaDigital = () => {
-    navigate("/receta-digital", { state: { paciente } });
-  };
+  // Navegar a Nuevo Pedido de Laboratorio
   const irANuevoPedidoLaboratorio = () => {
-    if (!diagnosticoSeleccionado) {
+    if (!diagnosticoSeleccionado.codigo) {
       alert("Debe seleccionar un diagnóstico antes de continuar.");
       return;
     }
@@ -94,7 +195,7 @@ const RegistrarEvolucion = () => {
     navigate("/pedidosLaboratorio", {
       state: {
         paciente: paciente,
-        historiaClinicaId: paciente.historiaClinicaId._id, // Acceso correcto al _id
+        historiaClinicaId: paciente.historiaClinicaId._id,
       },
     });
   };
@@ -111,11 +212,14 @@ const RegistrarEvolucion = () => {
                 <div
                   key={diag.codigo}
                   className={`diagnostico-item ${
-                    diagnosticoSeleccionado === diag.descripcion
+                    diagnosticoSeleccionado.codigo === diag.codigo
                       ? "selected"
                       : ""
                   }`}
-                  onClick={() => setDiagnosticoSeleccionado(diag.descripcion)}
+                  onClick={() => {
+                    console.log("Diagnóstico seleccionado:", diag);
+                    setDiagnosticoSeleccionado(diag);
+                  }}
                 >
                   {diag.descripcion}
                 </div>
@@ -165,12 +269,15 @@ const RegistrarEvolucion = () => {
                 <p>
                   <strong>Obra Social:</strong> {paciente.obraSocial}
                 </p>
+                <p>
+                  <strong>Número de Afiliado:</strong> {paciente.nroafiliado}
+                </p>
               </div>
 
               <div className="lab-request">
                 <button
                   onClick={() => {
-                    if (!diagnosticoSeleccionado) {
+                    if (!diagnosticoSeleccionado.codigo) {
                       alert(
                         "Debe seleccionar un diagnóstico antes de continuar."
                       );
@@ -183,22 +290,24 @@ const RegistrarEvolucion = () => {
                   Nueva Evolución
                 </button>
               </div>
+
               <div className="lab-request">
                 <h2>Pedidos de Laboratorio</h2>
                 <button onClick={irANuevoPedidoLaboratorio}>
                   Nuevo Pedido
                 </button>
               </div>
+
               <div className="digital-prescription">
                 <h2>Receta Digital</h2>
                 <button
                   onClick={() => {
-                    if (!diagnosticoSeleccionado) {
+                    if (!diagnosticoSeleccionado.codigo) {
                       alert(
                         "Debe seleccionar un diagnóstico antes de continuar."
                       );
                     } else {
-                      irARecetaDigital(); // Llamar a la función correctamente
+                      irARecetaDigital();
                     }
                   }}
                 >
@@ -209,19 +318,14 @@ const RegistrarEvolucion = () => {
               <div className="evoluciones">
                 <h2>Evoluciones</h2>
                 {evoluciones.length > 0 ? (
-                  evoluciones.map((evolucion, index) => (
-                    <div key={index}>
-                      <p>
-                        <strong>Diagnóstico:</strong> {evolucion.diagnostico}
-                      </p>
-                      <p>
-                        <strong>Comentario:</strong> {evolucion.descripcion}
-                      </p>
-                      <p>
-                        <strong>Fecha:</strong> {evolucion.fecha}
-                      </p>
-                    </div>
-                  ))
+                  <>
+                    <p>Datos de evoluciones:</p>
+                    <TablaC
+                      key={evoluciones.length}
+                      evoluciones={evoluciones}
+                      onEdit={handleEdit}
+                    />
+                  </>
                 ) : (
                   <p>No hay evoluciones registradas.</p>
                 )}

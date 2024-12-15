@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "../css/Modal.css";
 
 const ModalC = ({
@@ -6,28 +6,30 @@ const ModalC = ({
   onClose,
   onSave,
   modalType,
-  diagnosticos = [],
+  diagnosticos,
   diagnosticoSeleccionado,
+  setDiagnosticoSeleccionado,
   observacion,
   setObservacion,
 }) => {
   useEffect(() => {
     if (!isOpen) {
-      setObservacion(""); // Limpiar observación cuando el modal se cierre
+      setObservacion("");
     }
   }, [isOpen, setObservacion]);
 
   const handleGuardar = () => {
-    if (modalType === "evolucion" && !observacion.trim()) {
+    if (!diagnosticoSeleccionado.codigo) {
+      alert("Debe seleccionar un diagnóstico.");
+      return;
+    }
+    if (!observacion.trim()) {
       alert("Debe ingresar una observación.");
       return;
     }
-    if (modalType === "pedido" && !observacion.trim()) {
-      alert("Debe ingresar un pedido.");
-      return;
-    }
-    onSave(); // Guardar la evolución o pedido
-    onClose(); // Cerrar el modal
+    onSave(diagnosticoSeleccionado, observacion);
+
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -38,40 +40,31 @@ const ModalC = ({
         <h2>
           {modalType === "pedido" ? "Pedido de Laboratorio" : "Nueva Evolución"}
         </h2>
+        <label htmlFor="diagnostico">Seleccionar Diagnóstico:</label>
+        <select
+          id="diagnostico"
+          value={diagnosticoSeleccionado?.codigo || ""}
+          onChange={(e) =>
+            setDiagnosticoSeleccionado(
+              diagnosticos.find((diag) => diag.codigo === e.target.value) || {}
+            )
+          }
+          className="modal-select"
+        >
+          <option value="">Seleccione un diagnóstico</option>
+          {diagnosticos.map((diag) => (
+            <option key={diag.codigo} value={diag.codigo}>
+              {diag.descripcion}
+            </option>
+          ))}
+        </select>
 
-        {modalType === "pedido" ? (
-          <textarea
-            placeholder="Ingresa el pedido (máx. 50 caracteres)"
-            value={observacion}
-            onChange={(e) => setObservacion(e.target.value)}
-            maxLength={50}
-            className="modal-textarea"
-          />
-        ) : (
-          <>
-            <label htmlFor="diagnostico">Seleccionar Diagnóstico:</label>
-            <select
-              id="diagnostico"
-              value={diagnosticoSeleccionado}
-              onChange={(e) => setObservacion(e.target.value)}
-              className="modal-select"
-            >
-              <option value="">Seleccione un diagnóstico</option>
-              {diagnosticos.map((diag) => (
-                <option key={diag.codigo} value={diag.descripcion}>
-                  {diag.descripcion}
-                </option>
-              ))}
-            </select>
-
-            <textarea
-              placeholder="Ingrese la observación"
-              value={observacion}
-              onChange={(e) => setObservacion(e.target.value)}
-              className="modal-textarea"
-            />
-          </>
-        )}
+        <textarea
+          placeholder="Ingrese la observación"
+          value={observacion}
+          onChange={(e) => setObservacion(e.target.value)}
+          className="modal-textarea"
+        />
 
         <button onClick={handleGuardar}>Guardar</button>
         <button onClick={onClose}>Cancelar</button>

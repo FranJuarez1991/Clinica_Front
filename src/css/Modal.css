@@ -1,63 +1,88 @@
+/* Modal Overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
 }
 
+/* Modal Content */
 .modal-content {
-  background: white;
+  background-color: white;
   padding: 20px;
   border-radius: 8px;
   width: 400px;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Estilo para textarea */
-.modal-textarea {
-  width: 100%; /* Ocupa todo el ancho disponible */
-  height: 120px; /* Aumenta la altura */
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  resize: none; /* Evita que el usuario redimensione manualmente */
-  box-sizing: border-box;
-}
-
-.modal-textarea:focus {
-  border-color: #4caf50; /* Cambia el color del borde al enfocar */
-  outline: none;
-  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Agrega sombra */
-}
-
-.modal-actions {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.modal-save-button,
-.modal-close-button {
+/* Modal Title */
+.modal-content h2 {
+  margin: 0 0 15px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Input and Textarea */
+.modal-select,
+.modal-textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+.modal-select:focus,
+.modal-textarea:focus {
+  border-color: #0056b3;
+}
+
+/* Buttons */
+button {
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
   font-size: 14px;
+  cursor: pointer;
+  margin: 5px 0;
+  transition: background-color 0.3s ease;
 }
 
-.modal-save-button {
+/* Save Button */
+button:nth-of-type(1) {
   background-color: #4caf50;
   color: white;
 }
 
-.modal-close-button {
+button:nth-of-type(1):hover {
+  background-color: #45a049;
+}
+
+/* Cancel Button */
+button:nth-of-type(2) {
   background-color: #f44336;
   color: white;
 }
+
+button:nth-of-type(2):hover {
+  background-color: #e53935;
+}
+
+/* Close Button on Modal */
+button:focus {
+  outline: none;
+}
+
